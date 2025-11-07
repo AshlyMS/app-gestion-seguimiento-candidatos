@@ -13,3 +13,7 @@ export function guardarLocalStorage(llave, valor){
 export function consultarLocalStorage(llave){
     return JSON.parse(localStorage.getItem(llave))
 }
+
+export function limpiarLocalStorage(llave){
+    localStorage.removeItem(llave);
+}

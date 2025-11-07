@@ -1,7 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { consultarLocalStorage, limpiarLocalStorage } from "../helpers/funciones"; 
 import "./Header.css";
+import { alertaRedireccion } from "../helpers/alertas";
 
 const Header = () => {
+  let redireccion = useNavigate();
+  let usuario = consultarLocalStorage("usuario");
+  let iniciales = usuario.nombre.
+  split(" ").
+  map((palabra)=>palabra[0]).
+  join("")
+  console.log(iniciales);
+
+  function cerrarSesion(){
+    limpiarLocalStorage("usuario");
+    limpiarLocalStorage("token");
+    alertaRedireccion("Sesión Cerrada", "info", "/login", redireccion);
+  }
   return (
     <header className="header">
       <div className="header-container">
@@ -153,11 +168,11 @@ const Header = () => {
         <div className="header-user">
           <div className="user-profile">
             <div className="user-avatar">
-              <p></p>
+              <p>{iniciales}</p>
             </div>
             <div className="user-info">
-              <span className="user-name">Usuario Admin</span>
-              <span className="user-role">Administrador</span>
+              <span className="user-name">{usuario.nombre}</span>
+              <span className="user-role">{usuario.rol}</span>
             </div>
             <svg
               className="dropdown-icon"
@@ -176,6 +191,7 @@ const Header = () => {
             </svg>
           </div>
         </div>
+        <button onClick={cerrarSesion} className="nav-link">Cerrar Sesión</button>
       </div>
     </header>
   );

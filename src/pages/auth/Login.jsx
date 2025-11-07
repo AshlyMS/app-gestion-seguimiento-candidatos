@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { alertaGeneral, alertaRedireccion } from "../../helpers/alertas";
@@ -14,14 +14,20 @@ function Login() {
   function getUsuarios(){
     /* axios o fetch */
     fetch(endPoints.usuarios)
-    .then((response)=> console.log(response.json()))    
+    .then((response)=>(response.json()))  
+    .then((data)=>(setUsuarios(data)))
   }
+  useEffect(() => {
   getUsuarios()
+  }, []);
+  console.log(usuarios);
 
   function iniciarSesion() {
-    if (usuario == "admin" && contrasena == "1234") {
+    let auth = usuarios.find((item)=> item.contraseña == contrasena && item.correo == usuario);
+    if (auth) {
       let token = generarToken();
       guardarLocalStorage("token", token);
+      guardarLocalStorage("usuario", auth)
       alertaRedireccion("Bienvenido", "success", "/dashboard", redireccion);
     } else {
       alertaGeneral("Error", "Error de credenciales", "error");
